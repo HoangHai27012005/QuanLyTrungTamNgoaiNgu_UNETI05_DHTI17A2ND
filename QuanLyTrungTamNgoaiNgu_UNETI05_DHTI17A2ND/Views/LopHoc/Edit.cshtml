@@ -1,0 +1,25 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Form sửa lớp học *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model LopHocFormViewModel
+@{
+    ViewData["Title"] = "Sửa lớp học";
+}
+
+<h2>Sửa lớp học</h2>
+<hr />
+
+<form asp-action="Edit" asp-route-id="@Model.MaLop" method="post">
+    <input type="hidden" asp-for="MaLop" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <partial name="_FormLopHoc" model="Model" />
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

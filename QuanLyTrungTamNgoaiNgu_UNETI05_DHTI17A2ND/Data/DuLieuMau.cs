@@ -151,5 +151,36 @@ namespace QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Data
             db.DangKyHocs.AddRange(dangKys);
             db.SaveChanges();
         }
+        // Thêm 15 lớp bổ sung để test phân trang (chạy được cả khi CSDL đã có dữ liệu cũ)
+        public static void ThemLopHocMau(AppDbContext db)
+        {
+            // Đã thêm rồi thì thôi, tránh nhân đôi dữ liệu mỗi lần chạy
+            if (db.LopHocs.Any(l => l.TenLop.Contains("Bổ sung"))) return;
+
+            var khoaHocs = db.KhoaHocs.OrderBy(k => k.MaKhoaHoc).ToList();
+            if (khoaHocs.Count == 0) return;
+
+            string[] lich = { "Thứ 2-4-6 (18:00-20:00)", "Thứ 3-5-7 (18:30-20:30)", "Thứ 7-CN (08:00-11:00)" };
+
+            var dsLop = new List<LopHoc>();
+            for (int i = 0; i < 15; i++)
+            {
+                var kh = khoaHocs[i % khoaHocs.Count];
+                dsLop.Add(new LopHoc
+                {
+                    TenLop = $"{kh.TenKhoaHoc} - Bổ sung {i + 1:00}",
+                    KhoaHoc = kh,
+                    NgayKhaiGiang = new DateTime(2026, 12, 1).AddDays(i * 7),
+                    LichHoc = lich[i % 3],
+                    PhongHoc = $"P{401 + i}",
+                    SoLuongToiDa = 10 + (i % 4) * 5,                  // 10, 15, 20, 25
+                    HocPhi = 3000000 + (i % 8) * 500000,              // từ 3.0 triệu đến 6.5 triệu
+                    TrangThai = TrangThaiLopHoc.TatCa[i % 4]          // lần lượt đủ 4 trạng thái
+                });
+            }
+
+            db.LopHocs.AddRange(dsLop);
+            db.SaveChanges();
+        }
     }
 }

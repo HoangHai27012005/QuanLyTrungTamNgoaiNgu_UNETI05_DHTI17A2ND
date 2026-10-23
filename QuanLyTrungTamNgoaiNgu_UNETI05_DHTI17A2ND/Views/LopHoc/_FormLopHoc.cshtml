@@ -1,0 +1,70 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Các ô nhập liệu dùng chung cho thêm/sửa lớp học *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model LopHocFormViewModel
+
+<div class="row">
+    <div class="col-md-8 mb-3">
+        <label asp-for="TenLop" class="form-label"></label>
+        <input asp-for="TenLop" class="form-control" />
+        <span asp-validation-for="TenLop" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <label asp-for="TrangThai" class="form-label"></label>
+        <select asp-for="TrangThai" asp-items="Model.DanhSachTrangThai" class="form-select"></select>
+        <span asp-validation-for="TrangThai" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mb-3">
+        <label asp-for="MaKhoaHoc" class="form-label"></label>
+        <select asp-for="MaKhoaHoc" asp-items="Model.DanhSachKhoaHoc" class="form-select">
+            <option value="">-- Chọn khóa học --</option>
+        </select>
+        <span asp-validation-for="MaKhoaHoc" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <label asp-for="NgayKhaiGiang" class="form-label"></label>
+        <input asp-for="NgayKhaiGiang" type="date" class="form-control" />
+        <span asp-validation-for="NgayKhaiGiang" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="LichHoc" class="form-label"></label>
+        <input asp-for="LichHoc" class="form-control" placeholder="VD: Thứ 2-4-6 (18:00-20:00)" />
+        <span asp-validation-for="LichHoc" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label asp-for="PhongHoc" class="form-label"></label>
+        <input asp-for="PhongHoc" class="form-control" placeholder="VD: P101" />
+        <span asp-validation-for="PhongHoc" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="SoLuongToiDa" class="form-label"></label>
+        <input asp-for="SoLuongToiDa" type="number" min="1" class="form-control" />
+        <span asp-validation-for="SoLuongToiDa" class="text-danger"></span>
+        @if (Model.MaLop > 0)
+        {
+            <div class="form-text">Hiện có @Model.SoDaXacNhan học viên đã xác nhận, không được đặt thấp hơn số này.</div>
+        }
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label asp-for="HocPhi" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="HocPhi" type="number" min="1" step="1000" class="form-control" />
+            <span class="input-group-text">đ</span>
+        </div>
+        <span asp-validation-for="HocPhi" class="text-danger"></span>
+    </div>
+</div>

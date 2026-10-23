@@ -1,0 +1,14 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Partial hiển thị badge màu theo trạng thái lớp học *@
+@model string
+@{
+    string mau = Model switch
+    {
+        TrangThaiLopHoc.DangTuyenSinh => "bg-success",
+        TrangThaiLopHoc.SapMo => "bg-info text-dark",
+        TrangThaiLopHoc.DangHoc => "bg-primary",
+        _ => "bg-secondary"
+    };
+}
+<span class="badge @mau">@Model</span>

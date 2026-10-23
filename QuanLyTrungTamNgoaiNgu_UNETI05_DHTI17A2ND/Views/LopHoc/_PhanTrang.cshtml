@@ -1,0 +1,83 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Partial phân trang - mọi liên kết đều mang theo điều kiện tìm kiếm/lọc/sắp xếp *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model LopHocIndexViewModel
+@{
+    // Các điều kiện khác rỗng (tuKhoa, maKhoaHoc, ngoaiNgu, trangThai, hocPhiTu, hocPhiDen, sapXep, kichThuocTrang).
+    // asp-all-route-data gắn tất cả vào URL, riêng "trang" gắn bằng asp-route-trang ở từng liên kết.
+    var duLieuLoc = Model.LayDuLieuLoc();
+
+    // Hiển thị tối đa 5 số trang quanh trang hiện tại
+    int batDau = Math.Max(1, Model.Trang - 2);
+    int ketThuc = Math.Min(Model.TongSoTrang, batDau + 4);
+    batDau = Math.Max(1, ketThuc - 4);
+}
+
+@if (Model.TongSoTrang > 1)
+{
+    <nav aria-label="Phân trang">
+        <ul class="pagination justify-content-center mb-0">
+
+            @* ===== Nút Trước (vô hiệu hóa ở trang đầu) ===== *@
+            @if (Model.CoTrangTruoc)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-all-route-data="duLieuLoc"
+                       asp-route-trang="@(Model.Trang - 1)">&laquo; Trước</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled"><span class="page-link">&laquo; Trước</span></li>
+            }
+
+            @* ===== Trang 1 và dấu ... nếu cửa sổ số trang không bắt đầu từ 1 ===== *@
+            @if (batDau > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-all-route-data="duLieuLoc" asp-route-trang="1">1</a>
+                </li>
+                @if (batDau > 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+            }
+
+            @* ===== Danh sách số trang, đánh dấu trang hiện tại ===== *@
+            @for (int i = batDau; i <= ketThuc; i++)
+            {
+                <li class="page-item @(i == Model.Trang ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-all-route-data="duLieuLoc"
+                       asp-route-trang="@i">@i</a>
+                </li>
+            }
+
+            @* ===== Dấu ... và trang cuối ===== *@
+            @if (ketThuc < Model.TongSoTrang)
+            {
+                @if (ketThuc < Model.TongSoTrang - 1)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-all-route-data="duLieuLoc"
+                       asp-route-trang="@Model.TongSoTrang">@Model.TongSoTrang</a>
+                </li>
+            }
+
+            @* ===== Nút Sau (vô hiệu hóa ở trang cuối) ===== *@
+            @if (Model.CoTrangSau)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-all-route-data="duLieuLoc"
+                       asp-route-trang="@(Model.Trang + 1)">Sau &raquo;</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled"><span class="page-link">Sau &raquo;</span></li>
+            }
+        </ul>
+    </nav>
+}

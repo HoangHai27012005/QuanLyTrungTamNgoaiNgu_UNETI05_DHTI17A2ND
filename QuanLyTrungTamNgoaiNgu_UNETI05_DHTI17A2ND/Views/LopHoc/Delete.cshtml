@@ -1,0 +1,45 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Trang xác nhận xóa lớp học (xóa bằng POST) *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model LopHocItemViewModel
+@{
+    ViewData["Title"] = "Xóa lớp học";
+    int soDangKy = (int)(ViewBag.SoDangKy ?? 0);
+}
+
+<h2 class="text-danger">Xóa lớp học</h2>
+
+@if (soDangKy > 0)
+{
+    <div class="alert alert-warning">
+        Lớp này đã có <strong>@soDangKy</strong> lượt đăng ký nên <strong>không thể xóa</strong>.
+        Bạn có thể chuyển trạng thái sang "Đã kết thúc" thay vì xóa.
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">Bạn có chắc chắn muốn xóa lớp học này không?</div>
+}
+
+<dl class="row">
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TenLop)</dt>
+    <dd class="col-sm-9">@Model.TenLop</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TenKhoaHoc)</dt>
+    <dd class="col-sm-9">@Model.TenKhoaHoc</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.NgayKhaiGiang)</dt>
+    <dd class="col-sm-9">@Model.NgayKhaiGiang.ToString("dd/MM/yyyy")</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.HocPhi)</dt>
+    <dd class="col-sm-9">@Model.HocPhi.ToString("N0") đ</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TrangThai)</dt>
+    <dd class="col-sm-9"><partial name="_TrangThaiBadge" model="Model.TrangThai" /></dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.MaLop" method="post">
+    <button type="submit" class="btn btn-danger" disabled="@(soDangKy > 0)">Xác nhận xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>

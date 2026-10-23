@@ -1,0 +1,85 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Chi tiết lớp học, số chỗ còn lại, nút đăng ký cho học viên *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model LopHocItemViewModel
+@{
+    ViewData["Title"] = "Chi tiết lớp học";
+    bool laAdmin = PhienDangNhap.LaAdmin(Context.Session);
+    bool laHocVien = PhienDangNhap.LaHocVien(Context.Session);
+    bool dangTuyenSinh = Model.TrangThai == TrangThaiLopHoc.DangTuyenSinh;
+}
+
+<h2>@Model.TenLop</h2>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TenKhoaHoc)</dt>
+    <dd class="col-sm-9">
+        <a asp-controller="KhoaHoc" asp-action="Details" asp-route-id="@Model.MaKhoaHoc">@Model.TenKhoaHoc</a>
+        (@Model.NgoaiNgu - @Model.CapDo)
+    </dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.NgayKhaiGiang)</dt>
+    <dd class="col-sm-9">@Model.NgayKhaiGiang.ToString("dd/MM/yyyy")</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.LichHoc)</dt>
+    <dd class="col-sm-9">@Model.LichHoc</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.PhongHoc)</dt>
+    <dd class="col-sm-9">@Model.PhongHoc</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.HocPhi)</dt>
+    <dd class="col-sm-9">@Model.HocPhi.ToString("N0") đ</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.SoLuongToiDa)</dt>
+    <dd class="col-sm-9">@Model.SoLuongToiDa học viên</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.ConLai)</dt>
+    <dd class="col-sm-9">
+        @if (Model.DaDay)
+        {
+            <span class="badge bg-danger">Hết chỗ</span>
+        }
+        else
+        {
+            <strong>@Model.ConLai</strong>
+            <span class="text-muted">(đã xác nhận @Model.SoDaXacNhan / @Model.SoLuongToiDa)</span>
+        }
+    </dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TrangThai)</dt>
+    <dd class="col-sm-9"><partial name="_TrangThaiBadge" model="Model.TrangThai" /></dd>
+</dl>
+
+<div class="d-flex gap-2 flex-wrap">
+    <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+
+    @if (laAdmin)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.MaLop" class="btn btn-primary">Sửa</a>
+    }
+
+    @if (laHocVien)
+    {
+        @if (!dangTuyenSinh)
+        {
+            <button type="button" class="btn btn-success" disabled>Lớp không còn tuyển sinh</button>
+        }
+        else if (Model.DaDay)
+        {
+            <button type="button" class="btn btn-success" disabled>Lớp đã đủ chỗ</button>
+        }
+        else
+        {
+            @* POST sang DangKyHocController.DangKy của Sinh viên 3, tham số tên "maLop" *@
+            <form asp-controller="DangKyHoc" asp-action="DangKy" method="post" class="d-inline">
+                <input type="hidden" name="maLop" value="@Model.MaLop" />
+                <button type="submit" class="btn btn-success"
+                        onclick="return confirm('Bạn muốn đăng ký lớp này?');">
+                    Đăng ký lớp
+                </button>
+            </form>
+        }
+    }
+</div>
