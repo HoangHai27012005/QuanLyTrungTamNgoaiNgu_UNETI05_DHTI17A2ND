@@ -1,0 +1,65 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 2320310089 *@
+@* Nội dung thực hiện: Danh sách khóa học (Admin có nút quản trị, học viên chỉ xem) *@
+@model IEnumerable<KhoaHoc>
+@{
+    ViewData["Title"] = "Danh sách khóa học";
+    // Chỉ để ẩn/hiện nút. Quyền thật được kiểm tra ở Controller bằng [YeuCauAdmin]
+    bool laAdmin = PhienDangNhap.LaAdmin(Context.Session);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Danh sách khóa học</h2>
+    @if (laAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">+ Thêm khóa học</a>
+    }
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Tên khóa học</th>
+                <th>Ngoại ngữ</th>
+                <th>Cấp độ</th>
+                <th class="text-end">Học phí</th>
+                <th class="text-center">Số buổi</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.TenKhoaHoc</td>
+                    <td>@item.NgoaiNgu</td>
+                    <td>@item.CapDo</td>
+                    <td class="text-end">@item.HocPhi.ToString("N0") đ</td>
+                    <td class="text-center">@item.SoBuoi</td>
+                    <td>
+                        <span class="badge @(item.TrangThai ? "bg-success" : "bg-secondary")">
+                            @(item.TrangThai ? "Đang mở" : "Tạm đóng")
+                        </span>
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a asp-action="Details" asp-route-id="@item.MaKhoaHoc" class="btn btn-sm btn-outline-info">Chi tiết</a>
+                        @if (laAdmin)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.MaKhoaHoc" class="btn btn-sm btn-outline-primary">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@item.MaKhoaHoc" class="btn btn-sm btn-outline-danger">Xóa</a>
+                            <form asp-action="DoiTrangThai" asp-route-id="@item.MaKhoaHoc" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-warning">@(item.TrangThai ? "Đóng" : "Mở")</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" class="text-center text-muted">Chưa có khóa học nào.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

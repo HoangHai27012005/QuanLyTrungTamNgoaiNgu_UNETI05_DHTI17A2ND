@@ -1,0 +1,46 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Chi tiết khóa học *@
+@model KhoaHoc
+@{
+    ViewData["Title"] = "Chi tiết khóa học";
+    bool laAdmin = PhienDangNhap.LaAdmin(Context.Session);
+    int soLop = (int)(ViewBag.SoLop ?? 0);
+}
+
+<h2>@Model.TenKhoaHoc</h2>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.NgoaiNgu)</dt>
+    <dd class="col-sm-9">@Model.NgoaiNgu</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.CapDo)</dt>
+    <dd class="col-sm-9">@Model.CapDo</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.HocPhi)</dt>
+    <dd class="col-sm-9">@Model.HocPhi.ToString("N0") đ</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.SoBuoi)</dt>
+    <dd class="col-sm-9">@Model.SoBuoi buổi</dd>
+
+    <dt class="col-sm-3">Trạng thái</dt>
+    <dd class="col-sm-9">
+        <span class="badge @(Model.TrangThai ? "bg-success" : "bg-secondary")">
+            @(Model.TrangThai ? "Đang mở" : "Tạm đóng")
+        </span>
+    </dd>
+
+    <dt class="col-sm-3">Số lớp đã mở</dt>
+    <dd class="col-sm-9">@soLop lớp</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.MoTa)</dt>
+    <dd class="col-sm-9" style="white-space: pre-line">@Model.MoTa</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+<a asp-controller="LopHoc" asp-action="Index" class="btn btn-outline-primary">Xem lớp học</a>
+@if (laAdmin)
+{
+    <a asp-action="Edit" asp-route-id="@Model.MaKhoaHoc" class="btn btn-primary">Sửa</a>
+}

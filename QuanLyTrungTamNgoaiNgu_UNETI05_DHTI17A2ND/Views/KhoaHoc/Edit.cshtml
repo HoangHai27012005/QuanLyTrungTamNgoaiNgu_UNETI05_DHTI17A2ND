@@ -1,0 +1,24 @@
+﻿v@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Form sửa khóa học *@
+@model KhoaHoc
+@{
+    ViewData["Title"] = "Sửa khóa học";
+}
+
+<h2>Sửa khóa học</h2>
+<hr />
+
+<form asp-action="Edit" asp-route-id="@Model.MaKhoaHoc" method="post">
+    <input type="hidden" asp-for="MaKhoaHoc" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <partial name="_FormKhoaHoc" />
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

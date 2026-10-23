@@ -1,8 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Trang chủ giới thiệu trung tâm, lối vào khóa học và lớp học *@
+@model List<KhoaHoc>
+@{
+    ViewData["Title"] = "Trang chủ";
+    bool daDangNhap = PhienDangNhap.DaDangNhap(Context.Session);
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="p-5 mb-4 bg-light rounded-3">
+    <h1 class="display-5 fw-bold">Trung tâm Ngoại ngữ</h1>
+    <p class="fs-5 text-muted">
+        Tra cứu khóa học, chọn lớp phù hợp, đăng ký trực tuyến và theo dõi tình trạng đăng ký của bạn.
+    </p>
+    <a asp-controller="KhoaHoc" asp-action="Index" class="btn btn-primary btn-lg me-2">Xem khóa học</a>
+    <a asp-controller="LopHoc" asp-action="Index" class="btn btn-outline-primary btn-lg me-2">Xem lớp học</a>
+    @if (!daDangNhap)
+    {
+        <a asp-controller="TaiKhoan" asp-action="DangKy" class="btn btn-link btn-lg">Đăng ký tài khoản</a>
+    }
+</div>
+
+<h3 class="mb-3">Khóa học nổi bật</h3>
+<div class="row">
+    @foreach (var k in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <span class="badge bg-info text-dark mb-2">@k.NgoaiNgu - @k.CapDo</span>
+                    <h5 class="card-title">@k.TenKhoaHoc</h5>
+                    <p class="card-text text-muted">@k.SoBuoi buổi học</p>
+                    <p class="fw-bold text-primary mb-0">@k.HocPhi.ToString("N0") đ</p>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <p class="text-muted">Hiện chưa có khóa học nào đang mở.</p>
+    }
 </div>

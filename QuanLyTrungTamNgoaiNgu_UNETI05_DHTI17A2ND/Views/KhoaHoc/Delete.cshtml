@@ -1,0 +1,41 @@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Trang xác nhận xóa khóa học (xóa bằng POST) *@
+@model KhoaHoc
+@{
+    ViewData["Title"] = "Xóa khóa học";
+    int soLop = (int)(ViewBag.SoLop ?? 0);
+}
+
+<h2 class="text-danger">Xóa khóa học</h2>
+
+@if (soLop > 0)
+{
+    <div class="alert alert-warning">
+        Khóa học này đã có <strong>@soLop</strong> lớp học nên <strong>không thể xóa</strong>.
+        Bạn có thể chuyển trạng thái sang "Tạm đóng" thay vì xóa.
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">Bạn có chắc chắn muốn xóa khóa học này không?</div>
+}
+
+<dl class="row">
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TenKhoaHoc)</dt>
+    <dd class="col-sm-9">@Model.TenKhoaHoc</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.NgoaiNgu)</dt>
+    <dd class="col-sm-9">@Model.NgoaiNgu - @Model.CapDo</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.HocPhi)</dt>
+    <dd class="col-sm-9">@Model.HocPhi.ToString("N0") đ</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.SoBuoi)</dt>
+    <dd class="col-sm-9">@Model.SoBuoi buổi</dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.MaKhoaHoc" method="post">
+    <button type="submit" class="btn btn-danger" disabled="@(soLop > 0)">Xác nhận xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
