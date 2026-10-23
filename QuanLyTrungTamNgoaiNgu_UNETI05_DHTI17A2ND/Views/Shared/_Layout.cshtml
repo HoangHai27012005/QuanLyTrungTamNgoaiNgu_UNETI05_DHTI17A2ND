@@ -1,47 +1,109 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Layout chung, menu theo vai trò, hiển thị thông báo thành công/lỗi *@
+@{
+    var session = Context.Session;
+    bool daDangNhap = PhienDangNhap.DaDangNhap(session);
+    bool laAdmin = PhienDangNhap.LaAdmin(session);
+    bool laHocVien = PhienDangNhap.LaHocVien(session);
+    string? hoTen = PhienDangNhap.LayHoTen(session);
+}
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Trung tâm Ngoại ngữ</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">Trung tâm Ngoại ngữ</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuChinh">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                <div class="collapse navbar-collapse" id="menuChinh">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="KhoaHoc" asp-action="Index">Khóa học</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="LopHoc" asp-action="Index">Lớp học</a></li>
+
+                        @if (laHocVien)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="DangKyHoc" asp-action="LichSu">Lịch sử đăng ký</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="HocVien" asp-action="ThongTinCaNhan">Thông tin cá nhân</a></li>
+                        }
+
+                        @if (laAdmin)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Quản trị</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="ThongKe" asp-action="Index">Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-controller="HocVien" asp-action="Index">Danh sách học viên</a></li>
+                                    <li><a class="dropdown-item" asp-controller="QuanLyDangKy" asp-action="Index">Quản lý đăng ký</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-controller="ThongKe" asp-action="ChiTiet">Thống kê chi tiết</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        @if (daDangNhap)
+                        {
+                            <li class="nav-item">
+                                <span class="navbar-text me-3">
+                                    Xin chào, <strong>@hoTen</strong>
+                                    <span class="badge bg-light text-primary">@(laAdmin ? "Admin" : "Học viên")</span>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="TaiKhoan" asp-action="DangXuat" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-light btn-sm">Đăng xuất</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="btn btn-light btn-sm" asp-controller="TaiKhoan" asp-action="DangNhap">Đăng nhập</a></li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container mt-3">
+        @* Thông báo kết quả thao tác: controller gán TempData["ThanhCong"] hoặc TempData["Loi"] *@
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["ThanhCong"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Loi"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Loi"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <footer class="border-top text-muted py-3 mt-4">
+        <div class="container">&copy; 2026 - Trung tâm Ngoại ngữ - UNETI05 - DHTI17A2ND</div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
