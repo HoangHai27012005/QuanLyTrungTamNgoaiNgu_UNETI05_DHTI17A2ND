@@ -1,0 +1,56 @@
+﻿@* Họ và tên: Nguỵ Thế Toàn *@
+@* Mã sinh viên: 23203100050 *@
+@* Nội dung thực hiện: các trang của trang admin *@
+@model IEnumerable<QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.LopHoc>
+
+@{
+    ViewData["Title"] = "Lớp Đông Học Viên Nhất";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-danger"><i class="bi bi-trophy-fill"></i> Lớp Có Nhiều Học Viên Đăng Ký Nhất</h2>
+        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Quay lại Menu Thống Kê</a>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle-fill"></i> Số lượng học viên đăng ký cao nhất hiện tại: <strong>@ViewBag.MaxCount lượt đăng ký</strong> (Hiển thị tất cả lớp đồng hạng).
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 80px;">Mã Lớp</th>
+                    <th>Tên Lớp Học</th>
+                    <th>Lịch Học</th>
+                    <th>Phòng Học</th>
+                    <th>Sĩ Số Tối Đa</th>
+                    <th>Trạng Thái Lớp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Chưa có dữ liệu lượt đăng ký nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@item.MaLop</td>
+                            <td><strong>@item.TenLop</strong></td>
+                            <td>@item.LichHoc</td>
+                            <td>@item.PhongHoc</td>
+                            <td class="text-center">@item.SoLuongToiDa</td>
+                            <td class="text-center"><span class="badge bg-info text-dark">@item.TrangThai</span></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

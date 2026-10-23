@@ -1,0 +1,106 @@
+﻿@* Họ và tên: Nguỵ Thế Toàn *@
+@* Mã sinh viên: 23203100050 *@
+@* Nội dung thực hiện: các trang của trang admin *@
+@{
+    ViewData["Title"] = "Trang Thống Kê Báo Cáo";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">
+            <i class="bi bi-bar-chart-line-fill"></i> Thống Kê & Báo Cáo Trung Tâm
+        </h2>
+    </div>
+
+    <div class="row g-4">
+        <!-- 1. Thống kê Lớp theo Khóa học -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-4 border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        <i class="bi bi-journal-bookmark"></i> Lớp Theo Khóa Học
+                    </h5>
+                    <p class="card-text text-muted">Thống kê tổng số lượng lớp học được mở theo từng khóa học cụ thể.</p>
+                    <a asp-controller="ThongKe" asp-action="SoLopTheoKhoaHoc" class="btn btn-outline-primary btn-sm">
+                        Xem chi tiết <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Thống kê Đăng ký theo Lớp -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-4 border-info">
+                <div class="card-body">
+                    <h5 class="card-title text-info">
+                        <i class="bi bi-people-fill"></i> Đăng Ký Theo Lớp
+                    </h5>
+                    <p class="card-text text-muted">Tổng hợp số lượng đăng ký chia theo trạng thái (Chờ xác nhận, Đã xác nhận, Đã hủy) cho từng lớp.</p>
+                    <a asp-controller="ThongKe" asp-action="DangKyTheoLop" class="btn btn-outline-info btn-sm">
+                        Xem chi tiết <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Thống kê Đăng ký theo Trạng thái -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-4 border-warning">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">
+                        <i class="bi bi-pie-chart-fill"></i> Đăng Ký Theo Trạng Thái
+                    </h5>
+                    <p class="card-text text-muted">Thống kê tổng số lượt đăng ký chia theo từng trạng thái xử lý.</p>
+                    <a asp-controller="ThongKe" asp-action="DangKyTheoTrangThai" class="btn btn-outline-warning btn-sm">
+                        Xem chi tiết <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Lớp có nhiều học viên nhất -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-4 border-danger">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">
+                        <i class="bi bi-trophy-fill"></i> Lớp Đông Học Viên Nhất
+                    </h5>
+                    <p class="card-text text-muted">Danh sách các lớp học sở hữu số lượng đăng ký cao nhất (có xử lý đồng hạng).</p>
+                    <a asp-controller="ThongKe" asp-action="LopNhieuHocVienNhat" class="btn btn-outline-danger btn-sm">
+                        Xem chi tiết <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Học phí theo Lớp -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-4 border-success">
+                <div class="card-body">
+                    <h5 class="card-title text-success">
+                        <i class="bi bi-cash-stack"></i> Học Phí Theo Lớp
+                    </h5>
+                    <p class="card-text text-muted">Tổng doanh thu thực tế thu được theo từng lớp (chỉ tính đơn Đã xác nhận).</p>
+                    <a asp-controller="ThongKe" asp-action="HocPhiTheoLop" class="btn btn-outline-success btn-sm">
+                        Xem chi tiết <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Học phí theo Khóa học -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-4 border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title text-secondary">
+                        <i class="bi bi-bank"></i> Học Phí Theo Khóa Học
+                    </h5>
+                    <p class="card-text text-muted">Tổng doanh thu thực tế tính theo từng chương trình/khóa học (chỉ tính đơn Đã xác nhận).</p>
+                    <a asp-controller="ThongKe" asp-action="HocPhiTheoKhoaHoc" class="btn btn-outline-secondary btn-sm">
+                        Xem chi tiết <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

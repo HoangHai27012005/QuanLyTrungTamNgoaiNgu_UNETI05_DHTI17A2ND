@@ -1,0 +1,138 @@
+﻿@* Họ và tên: Nguỵ Thế Toàn *@
+@* Mã sinh viên: 23203100050 *@
+@* Nội dung thực hiện: trang quản lý đăng ký *@
+@model IEnumerable<QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.DangKyHoc>
+
+@{
+    ViewData["Title"] = "Quản lý đăng ký";
+}
+
+<div class="container-fluid mt-4">
+    <h2><i class="bi bi-journal-check"></i> Quản Lý Đăng Ký Học Viên</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Form tìm kiếm và lọc -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="searchTen" value="@ViewBag.SearchTen" class="form-control" placeholder="Tìm theo tên học viên..." />
+        </div>
+        <div class="col-md-3">
+            <select name="maLop" asp-items="ViewBag.LopHocs" class="form-select">
+                <option value="">-- Tất cả lớp học --</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="trangThai" class="form-select">
+                <option value="">-- Tất cả trạng thái --</option>
+                <option value="Chờ xác nhận" selected="@(ViewBag.TrangThai == "Chờ xác nhận")">Chờ xác nhận</option>
+                <option value="Đã xác nhận" selected="@(ViewBag.TrangThai == "Đã xác nhận")">Đã xác nhận</option>
+                <option value="Đã hủy" selected="@(ViewBag.TrangThai == "Đã hủy")">Đã hủy</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Lọc</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Học Viên</th>
+                    <th>Lớp Học</th>
+                    <th>Khóa Học</th>
+                    <th>Ngày Đăng Ký</th>
+                    <th>Học Phí</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">Không tìm thấy bản ghi đăng ký nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>@(item.HocVien != null ? item.HocVien.HoTen : "N/A")</strong></td>
+                            <td>@(item.LopHoc != null ? item.LopHoc.TenLop : "N/A")</td>
+                            <td>@(item.LopHoc != null && item.LopHoc.KhoaHoc != null ? item.LopHoc.KhoaHoc.TenKhoaHoc : "N/A")</td>
+                            <td>@item.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="text-end fw-bold">@item.HocPhi.ToString("N0") đ</td>
+                            <td>
+                                @if (item.TrangThai == "Đã xác nhận")
+                                {
+                                    <span class="badge bg-success">Đã xác nhận</span>
+                                }
+                                else if (item.TrangThai == "Chờ xác nhận")
+                                {
+                                    <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Đã hủy</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    @if (item.TrangThai == "Chờ xác nhận")
+                                    {
+                                        <form asp-action="XacNhan" asp-route-id="@item.MaDangKy" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-success">Xác nhận</button>
+                                        </form>
+                                    }
+                                    @if (item.TrangThai != "Đã hủy")
+                                    {
+                                        <form asp-action="Huy" asp-route-id="@item.MaDangKy" method="post" onsubmit="return confirm('Bạn có chắc muốn hủy đăng ký này?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Phân trang -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-searchTen="@ViewBag.SearchTen"
+                           asp-route-maLop="@ViewBag.MaLop"
+                           asp-route-trangThai="@ViewBag.TrangThai">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

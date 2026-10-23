@@ -1,0 +1,53 @@
+﻿@* Họ và tên: Nguỵ Thế Toàn *@
+@* Mã sinh viên: 23203100050 *@
+@* Nội dung thực hiện: các trang của trang admin *@
+@model IEnumerable<QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels.ThongKeDangKyTheoLopVM>
+
+@{
+    ViewData["Title"] = "Thống Kê Đăng Ký Theo Lớp";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary"><i class="bi bi-people-fill"></i> Thống Kê Số Lượng Đăng Ký Theo Lớp</h2>
+        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Quay lại Menu Thống Kê</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th style="width: 50px;">STT</th>
+                    <th>Tên Lớp Học</th>
+                    <th>Chờ Xác Nhận</th>
+                    <th>Đã Xác Nhận</th>
+                    <th>Đã Hủy</th>
+                    <th>Tổng Số Đăng Ký</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Chưa có dữ liệu thống kê.</td>
+                    </tr>
+                }
+                else
+                {
+                    int stt = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr class="text-center">
+                            <td>@(stt++)</td>
+                            <td class="text-start"><strong>@item.TenLop</strong></td>
+                            <td><span class="badge bg-warning text-dark fs-6">@item.SoChoXacNhan</span></td>
+                            <td><span class="badge bg-success fs-6">@item.SoDaXacNhan</span></td>
+                            <td><span class="badge bg-danger fs-6">@item.SoDaHuy</span></td>
+                            <td><strong class="fs-6">@item.TongDangKy</strong></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
