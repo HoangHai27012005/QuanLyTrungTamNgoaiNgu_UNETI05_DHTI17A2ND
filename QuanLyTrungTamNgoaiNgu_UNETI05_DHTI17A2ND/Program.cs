@@ -1,9 +1,11 @@
 // Họ và tên: Hoàng Thanh Hải
 // Mã sinh viên: 23203100089
 // Nội dung thực hiện: Cấu hình DbContext, Session, culture vi-VN, tự migrate và nạp dữ liệu mẫu
+
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Data;
+using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Đăng ký DangKyHocService cho Module 3 (Sinh viên 3)
+builder.Services.AddScoped<IDangKyHocService, DangKyHocService>();
 
 // Session (cần cache bộ nhớ để lưu dữ liệu session)
 builder.Services.AddDistributedMemoryCache();
@@ -50,6 +55,7 @@ app.UseSession();        // phải đặt trước UseAuthorization và MapContr
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")

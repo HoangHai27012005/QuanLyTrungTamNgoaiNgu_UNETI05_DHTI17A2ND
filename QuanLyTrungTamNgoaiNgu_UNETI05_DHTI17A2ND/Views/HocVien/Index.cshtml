@@ -1,0 +1,68 @@
+﻿@model IEnumerable<QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.HocVien>
+@{
+    ViewData["Title"] = "Quản lý học viên";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3 text-primary"><i class="bi bi-people-fill"></i> Quản lý danh sách học viên</h2>
+
+    <form method="get" asp-action="Index" class="row g-2 mb-3">
+        <div class="col-md-6">
+            <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm theo họ tên, email, SĐT..." value="@ViewBag.CurrentFilter" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Tìm kiếm</button>
+        </div>
+    </form>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Mã HV</th>
+                            <th>Họ tên</th>
+                            <th>Ngày sinh</th>
+                            <th>Giới tính</th>
+                            <th>Số điện thoại</th>
+                            <th>Email</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var hv in Model)
+                        {
+                            <tr>
+                                <td>@hv.MaHocVien</td>
+                                <td class="fw-bold">@hv.HoTen</td>
+                                <td>@hv.NgaySinh.ToString("dd/MM/yyyy")</td>
+                                <td>@hv.GioiTinh</td>
+                                <td>@hv.SoDienThoai</td>
+                                <td>@hv.Email</td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@hv.MaHocVien" class="btn btn-sm btn-info text-white"><i class="bi bi-eye"></i> Chi tiết</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mb-0">
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewBag.CurrentFilter">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</div>

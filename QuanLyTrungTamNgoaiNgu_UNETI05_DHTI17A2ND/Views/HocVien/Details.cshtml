@@ -1,0 +1,77 @@
+﻿@model QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.HocVien
+@{
+    ViewData["Title"] = "Chi tiết học viên";
+}
+
+<div class="container mt-4">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Chi tiết học viên: @Model.HoTen</h4>
+            <a asp-action="Index" class="btn btn-light btn-sm"><i class="bi bi-arrow-left"></i> Quay lại</a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6"><p><strong>Mã học viên:</strong> @Model.MaHocVien</p></div>
+                <div class="col-md-6"><p><strong>Họ và tên:</strong> @Model.HoTen</p></div>
+                <div class="col-md-6"><p><strong>Ngày sinh:</strong> @Model.NgaySinh.ToString("dd/MM/yyyy")</p></div>
+                <div class="col-md-6"><p><strong>Giới tính:</strong> @Model.GioiTinh</p></div>
+                <div class="col-md-6"><p><strong>Số điện thoại:</strong> @Model.SoDienThoai</p></div>
+                <div class="col-md-6"><p><strong>Email:</strong> @Model.Email</p></div>
+                <div class="col-md-12"><p><strong>Địa chỉ:</strong> @Model.DiaChi</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Danh sách các lớp đã đăng ký</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.DanhSachDangKy == null || !Model.DanhSachDangKy.Any())
+            {
+                <p class="text-muted mb-0">Học viên chưa đăng ký lớp học nào.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Tên lớp</th>
+                                <th>Khóa học</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Học phí</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var dk in Model.DanhSachDangKy)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@(dk.LopHoc != null ? dk.LopHoc.TenLop : "N/A")</td>
+                                    <td>@(dk.LopHoc != null && dk.LopHoc.KhoaHoc != null ? dk.LopHoc.KhoaHoc.TenKhoaHoc : "N/A")</td>
+                                    <td>@dk.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-danger fw-bold">@dk.HocPhi.ToString("N0") VNĐ</td>
+                                    <td>
+                                        @if (dk.TrangThai == "Đã xác nhận")
+                                        {
+                                            <span class="badge bg-success">Đã xác nhận</span>
+                                        }
+                                        else if (dk.TrangThai == "Chờ xác nhận")
+                                        {
+                                            <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Đã hủy</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

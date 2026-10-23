@@ -1,5 +1,59 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels.LopHocIndexViewModel
 @{
+    ViewData["Title"] = "Danh sách lớp học";
 }
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary font-weight-bold"><i class="bi bi-journal-bookmark"></i> Danh sách lớp học đang mở</h2>
+
+    @if (TempData["ThongBaoLoi"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ThongBaoLoi"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        @if (Model != null)
+        {
+            var danhSach = Model.GetType().GetProperties()
+                .FirstOrDefault(p => typeof(System.Collections.IEnumerable).IsAssignableFrom(p.PropertyType) && p.PropertyType != typeof(string))
+                ?.GetValue(Model) as System.Collections.IEnumerable;
+
+            if (danhSach != null)
+            {
+                foreach (dynamic item in danhSach)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm border-primary">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0 text-white">@item.TenLop</h5>
+                                <span class="badge bg-light text-dark">@item.TrangThai</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Khóa học:</strong> @item.TenKhoaHoc</p>
+                                <p class="card-text"><strong>Khai giảng:</strong> @item.NgayKhaiGiang.ToString("dd/MM/yyyy")</p>
+                                <p class="card-text"><strong>Lịch học:</strong> @item.LichHoc</p>
+                                <p class="card-text"><strong>Phòng học:</strong> @item.PhongHoc</p>
+                                <p class="card-text"><strong>Học phí:</strong> <span class="text-danger fw-bold fs-5">@item.HocPhi.ToString("N0") VNĐ</span></p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 text-end pb-3">
+                                @if (Context.Session.GetString("VaiTro") == "HocVien" && item.TrangThai == "Đang tuyển sinh")
+                                {
+                                    <form asp-controller="DangKyHoc" asp-action="DangKy" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="maLop" value="@item.MaLop" />
+                                        <button type="submit" class="btn btn-success font-weight-bold px-4" onclick="return confirm('Bạn có chắc chắn muốn đăng ký lớp @item.TenLop?');">
+                                            <i class="bi bi-pencil-square"></i> Đăng ký lớp này
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>

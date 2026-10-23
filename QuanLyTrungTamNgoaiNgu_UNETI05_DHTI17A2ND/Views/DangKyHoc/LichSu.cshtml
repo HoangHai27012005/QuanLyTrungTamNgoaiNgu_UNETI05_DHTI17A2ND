@@ -1,0 +1,71 @@
+﻿@model IEnumerable<QuanLyTrungTamNgoaiNgu.Models.ViewModels.LichSuDangKyViewModel>
+@{
+    ViewData["Title"] = "Lịch sử đăng ký lớp học";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3 text-primary"><i class="bi bi-clock-history"></i> Lịch sử đăng ký lớp học</h2>
+
+    @if (TempData["ThongBaoThanhCong"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["ThongBaoThanhCong"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <p class="text-muted mb-0">Bạn chưa đăng ký lớp học nào.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Tên lớp</th>
+                                <th>Khóa học</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Học phí</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 1;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@(index++)</td>
+                                    <td class="fw-bold">@item.TenLop</td>
+                                    <td>@item.TenKhoaHoc</td>
+                                    <td>@item.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-danger fw-bold">@item.HocPhi.ToString("N0") VNĐ</td>
+                                    <td>
+                                        @if (item.TrangThai == "Đã xác nhận")
+                                        {
+                                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Đã xác nhận</span>
+                                        }
+                                        else if (item.TrangThai == "Chờ xác nhận")
+                                        {
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Chờ xác nhận</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary"><i class="bi bi-x-circle"></i> Đã hủy</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
