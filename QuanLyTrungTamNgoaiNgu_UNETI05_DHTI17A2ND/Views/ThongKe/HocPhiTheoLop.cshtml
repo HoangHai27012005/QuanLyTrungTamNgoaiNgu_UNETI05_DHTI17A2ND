@@ -1,5 +1,40 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@* Họ và tên: Ngụy Thế Toàn *@
+@* Mã sinh viên: 2320310050 *@
+@* Nội dung thực hiện: Thống kê tổng học phí theo lớp (chỉ đăng ký Đã xác nhận) *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model List<ThongKeHocPhiTheoLopVM>
 @{
+    ViewData["Title"] = "Học phí theo lớp";
 }
+
+<h2 class="mb-3">Tổng học phí theo lớp</h2>
+<p class="text-muted">Chỉ tính đăng ký "Đã xác nhận". Lớp chưa có đăng ký đã xác nhận không hiện trong bảng.</p>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-light">
+        <tr><th>Lớp</th><th>Khóa học</th><th class="text-end">Số đăng ký đã xác nhận</th><th class="text-end">Tổng học phí</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <td>@x.TenLop</td>
+                <td>@x.TenKhoaHoc</td>
+                <td class="text-end">@x.SoDangKy</td>
+                <td class="text-end">@(x.TongHocPhi.ToString("N0") + " đ")</td>
+            </tr>
+        }
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="text-center text-muted">Chưa có đăng ký nào được xác nhận.</td></tr>
+        }
+    </tbody>
+    <tfoot class="table-light">
+        <tr>
+            <th colspan="2">Tổng cộng</th>
+            <th class="text-end">@Model.Sum(x => x.SoDangKy)</th>
+            <th class="text-end">@(Model.Sum(x => x.TongHocPhi).ToString("N0") + " đ")</th>
+        </tr>
+    </tfoot>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>s
