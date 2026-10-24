@@ -1,0 +1,30 @@
+﻿@* Họ và tên: Ngụy Thế Toàn *@
+@* Mã sinh viên: 2320310050 *@
+@* Nội dung thực hiện: Thống kê số lớp theo khóa học *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model List<ThongKeLopTheoKhoaHocVM>
+@{
+    ViewData["Title"] = "Số lớp theo khóa học";
+}
+
+<h2 class="mb-3">Số lớp theo từng khóa học</h2>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-light">
+        <tr><th>Mã</th><th>Khóa học</th><th class="text-end">Số lớp</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr><td>@x.MaKhoaHoc</td><td>@x.TenKhoaHoc</td><td class="text-end">@x.SoLop</td></tr>
+        }
+        @if (!Model.Any())
+        {
+            <tr><td colspan="3" class="text-center text-muted">Chưa có khóa học nào.</td></tr>
+        }
+    </tbody>
+    <tfoot class="table-light">
+        <tr><th colspan="2">Tổng</th><th class="text-end">@Model.Sum(x => x.SoLop)</th></tr>
+    </tfoot>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>

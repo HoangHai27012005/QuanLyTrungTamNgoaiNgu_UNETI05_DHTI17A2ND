@@ -1,0 +1,17 @@
+﻿@* Họ và tên: Ngụy Thế Toàn *@
+@* Mã sinh viên: 2320310050 *@
+@* Nội dung thực hiện: Trang chủ thống kê, liên kết đến 6 báo cáo *@
+@{
+    ViewData["Title"] = "Thống kê";
+}
+
+<h2 class="mb-3">Thống kê</h2>
+
+<div class="list-group">
+    <a class="list-group-item list-group-item-action" asp-action="LopTheoKhoaHoc">1. Số lớp theo từng khóa học</a>
+    <a class="list-group-item list-group-item-action" asp-action="DangKyTheoLop">2. Số đăng ký theo từng lớp (tách theo trạng thái)</a>
+    <a class="list-group-item list-group-item-action" asp-action="DangKyTheoTrangThai">3. Số đăng ký theo từng trạng thái</a>
+    <a class="list-group-item list-group-item-action" asp-action="LopNhieuDangKyNhat">4. Lớp có nhiều học viên đăng ký nhất</a>
+    <a class="list-group-item list-group-item-action" asp-action="HocPhiTheoLop">5. Tổng học phí theo lớp (đã xác nhận)</a>
+    <a class="list-group-item list-group-item-action" asp-action="HocPhiTheoKhoaHoc">6. Tổng học phí theo khóa học (đã xác nhận)</a>
+</div>

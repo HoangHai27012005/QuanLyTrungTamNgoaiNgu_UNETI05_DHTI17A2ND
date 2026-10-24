@@ -1,0 +1,35 @@
+﻿@* Họ và tên: Ngụy Thế Toàn *@
+@* Mã sinh viên: 2320310050 *@
+@* Nội dung thực hiện: Thống kê lớp có nhiều học viên đăng ký nhất (hiện cả lớp đồng hạng) *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model List<ThongKeLopNhieuDangKyNhatVM>
+@{
+    ViewData["Title"] = "Lớp nhiều đăng ký nhất";
+}
+
+<h2 class="mb-3">Lớp có nhiều học viên đăng ký nhất</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Chưa có đăng ký nào còn hiệu lực nên chưa xác định được lớp.</div>
+}
+else
+{
+    <p>
+        Số đăng ký cao nhất: <strong>@Model.First().SoDangKy</strong>
+        (@Model.Count lớp@(Model.Count > 1 ? " đồng hạng" : "")).
+        <span class="text-muted">Chỉ tính đăng ký còn hiệu lực (không tính "Đã hủy").</span>
+    </p>
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr><th>Lớp</th><th>Khóa học</th><th class="text-end">Số đăng ký</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var x in Model)
+            {
+                <tr><td>@x.TenLop</td><td>@x.TenKhoaHoc</td><td class="text-end">@x.SoDangKy</td></tr>
+            }
+        </tbody>
+    </table>
+}
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>

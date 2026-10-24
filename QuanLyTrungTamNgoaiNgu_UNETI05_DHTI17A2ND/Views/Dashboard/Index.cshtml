@@ -1,0 +1,74 @@
+﻿@* Họ và tên: Ngụy Thế Toàn *@
+@* Mã sinh viên: 2320310050 *@
+@* Nội dung thực hiện: Dashboard dạng thẻ (card) *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card text-bg-primary h-100">
+            <div class="card-body">
+                <div>Tổng khóa học</div><div class="fs-1 fw-bold">@Model.TongKhoaHoc</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-primary h-100">
+            <div class="card-body">
+                <div>Tổng lớp học</div><div class="fs-1 fw-bold">@Model.TongLopHoc</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-primary h-100">
+            <div class="card-body">
+                <div>Tổng học viên</div><div class="fs-1 fw-bold">@Model.TongHocVien</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-secondary h-100">
+            <div class="card-body">
+                <div>Tổng lượt đăng ký</div><div class="fs-1 fw-bold">@Model.TongLuotDangKy</div>
+                <a class="link-light" asp-controller="QuanLyDangKy" asp-action="Index">Xem tất cả</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-warning h-100">
+            <div class="card-body">
+                <div>Đăng ký chờ xác nhận</div><div class="fs-1 fw-bold">@Model.SoDangKyChoXacNhan</div>
+                <a class="link-dark" asp-controller="QuanLyDangKy" asp-action="Index"
+                   asp-route-trangThai="@TrangThaiDangKyHoc.ChoXacNhan">Xử lý ngay</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-success h-100">
+            <div class="card-body">
+                <div>Đăng ký đã xác nhận</div><div class="fs-1 fw-bold">@Model.SoDangKyDaXacNhan</div>
+                <a class="link-light" asp-controller="QuanLyDangKy" asp-action="Index"
+                   asp-route-trangThai="@TrangThaiDangKyHoc.DaXacNhan">Xem danh sách</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-info h-100">
+            <div class="card-body">
+                <div>Lớp đang tuyển sinh</div><div class="fs-1 fw-bold">@Model.SoLopDangTuyenSinh</div>
+                <a class="link-dark" asp-controller="LopHoc" asp-action="Index"
+                   asp-route-trangThai="@TrangThaiLopHoc.DangTuyenSinh">Xem lớp</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a class="btn btn-outline-primary" asp-controller="ThongKe" asp-action="Index">Xem các báo cáo thống kê</a>
+</div>

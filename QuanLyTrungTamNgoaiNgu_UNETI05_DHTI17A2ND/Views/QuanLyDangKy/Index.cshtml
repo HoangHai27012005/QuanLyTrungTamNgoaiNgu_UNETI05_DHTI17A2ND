@@ -1,0 +1,136 @@
+﻿@* Họ và tên: Ngụy Thế Toàn *@
+@* Mã sinh viên: 2320310050 *@
+@* Nội dung thực hiện: Danh sách đăng ký cho Admin (tìm kiếm, lọc, phân trang, xác nhận, hủy) *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model QuanLyDangKyIndexViewModel
+@{
+    ViewData["Title"] = "Quản lý đăng ký";
+    // URL hiện tại (kèm điều kiện lọc) để quay lại sau khi xác nhận/hủy
+    var urlHienTai = Context.Request.Path.Value + Context.Request.QueryString.Value;
+}
+
+<h2 class="mb-3">Quản lý đăng ký</h2>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <input name="tuKhoa" value="@Model.TuKhoa" class="form-control" placeholder="Tên học viên..." />
+    </div>
+    <div class="col-md-3">
+        <select name="maLop" asp-items="Model.DanhSachLop" class="form-select">
+            <option value="">-- Tất cả lớp --</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="trangThai" class="form-select">
+            <option value="">-- Tất cả trạng thái --</option>
+            @foreach (var tt in Model.DanhSachTrangThai)
+            {
+                <option value="@tt" selected="@(tt == Model.TrangThai)">@tt</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary" type="submit">Lọc</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Xóa lọc</a>
+    </div>
+</form>
+
+<p class="text-muted">Tìm thấy <strong>@Model.TongSoBanGhi</strong> đăng ký.</p>
+
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>Học viên</th>
+            <th>Lớp</th>
+            <th>Khóa học</th>
+            <th>Ngày đăng ký</th>
+            <th class="text-end">Học phí</th>
+            <th class="text-center">Chỗ (xác nhận/tối đa)</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.DanhSach)
+        {
+            <tr>
+                <td>@item.MaDangKy</td>
+                <td>@item.HoTenHocVien</td>
+                <td>@item.TenLop</td>
+                <td>@item.TenKhoaHoc</td>
+                <td>@item.NgayDangKy.ToString("dd/MM/yyyy")</td>
+                <td class="text-end">@(item.HocPhi.ToString("N0") + " đ")</td>
+                <td class="text-center">
+                    @item.SoDaXacNhan / @item.SoLuongToiDa
+                    @if (item.DaDay)
+                    {
+                        <span class="badge bg-danger">Đầy</span>
+                    }
+                </td>
+                <td><partial name="_TrangThaiDangKyBadge" model="item.TrangThai" /></td>
+                <td class="text-nowrap">
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@item.MaDangKy">Chi tiết</a>
+
+                    @if (item.TrangThai == TrangThaiDangKyHoc.ChoXacNhan)
+                    {
+                        <form asp-action="XacNhan" method="post" class="d-inline">
+                            <input type="hidden" name="maDangKy" value="@item.MaDangKy" />
+                            <input type="hidden" name="returnUrl" value="@urlHienTai" />
+                            <button type="submit" class="btn btn-sm btn-success">Xác nhận</button>
+                        </form>
+                    }
+                    @if (item.TrangThai != TrangThaiDangKyHoc.DaHuy)
+                    {
+                        <form asp-action="Huy" method="post" class="d-inline"
+                              onsubmit="return confirm('Bạn chắc chắn muốn hủy đăng ký này?');">
+                            <input type="hidden" name="maDangKy" value="@item.MaDangKy" />
+                            <input type="hidden" name="returnUrl" value="@urlHienTai" />
+                            <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
+                        </form>
+                    }
+                    @if (item.TrangThai == TrangThaiDangKyHoc.DaHuy)
+                    {
+                        <form asp-action="CapNhatTrangThai" method="post" class="d-inline">
+                            <input type="hidden" name="maDangKy" value="@item.MaDangKy" />
+                            <input type="hidden" name="trangThaiMoi" value="@TrangThaiDangKyHoc.ChoXacNhan" />
+                            <input type="hidden" name="returnUrl" value="@urlHienTai" />
+                            <button type="submit" class="btn btn-sm btn-warning">Khôi phục</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        @if (!Model.DanhSach.Any())
+        {
+            <tr><td colspan="9" class="text-center text-muted">Không có đăng ký phù hợp.</td></tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.TongSoTrang > 1)
+{
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.Trang <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-tuKhoa="@Model.TuKhoa"
+                   asp-route-maLop="@Model.MaLop" asp-route-trangThai="@Model.TrangThai"
+                   asp-route-kichThuocTrang="@Model.KichThuocTrang" asp-route-trang="@(Model.Trang - 1)">«</a>
+            </li>
+            @for (int i = 1; i <= Model.TongSoTrang; i++)
+            {
+                <li class="page-item @(i == Model.Trang ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-maLop="@Model.MaLop" asp-route-trangThai="@Model.TrangThai"
+                       asp-route-kichThuocTrang="@Model.KichThuocTrang" asp-route-trang="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.Trang >= Model.TongSoTrang ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-tuKhoa="@Model.TuKhoa"
+                   asp-route-maLop="@Model.MaLop" asp-route-trangThai="@Model.TrangThai"
+                   asp-route-kichThuocTrang="@Model.KichThuocTrang" asp-route-trang="@(Model.Trang + 1)">»</a>
+            </li>
+        </ul>
+    </nav>
+}
