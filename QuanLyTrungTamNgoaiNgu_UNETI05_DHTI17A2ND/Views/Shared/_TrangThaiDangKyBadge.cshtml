@@ -1,0 +1,14 @@
+﻿@* Họ và tên: Nguyễn Hoàng Huy *@
+@* Mã sinh viên: 23203100054 *@
+@* Nội dung thực hiện: Nhãn màu trạng thái đăng ký (Model là string trạng thái) *@
+@model string
+@{
+    var mau = Model switch
+    {
+        "Đã xác nhận" => "bg-success",
+        "Chờ xác nhận" => "bg-warning text-dark",
+        "Đã hủy" => "bg-secondary",
+        _ => "bg-light text-dark"
+    };
+}
+<span class="badge @mau">@Model</span>

@@ -1,0 +1,55 @@
+﻿@* Họ và tên: Nguyễn Hoàng Huy *@
+@* Mã sinh viên: 23203100054 *@
+@* Nội dung thực hiện: Chi tiết học viên và các lớp đã đăng ký (Admin) *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model HocVienChiTietViewModel
+@{
+    ViewData["Title"] = "Chi tiết học viên";
+}
+
+<h2 class="mb-3">Chi tiết học viên</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Mã học viên</dt>
+    <dd class="col-sm-9">@Model.MaHocVien</dd>
+    <dt class="col-sm-3">Họ và tên</dt>
+    <dd class="col-sm-9">@Model.HoTen</dd>
+    <dt class="col-sm-3">Ngày sinh</dt>
+    <dd class="col-sm-9">@Model.NgaySinh.ToString("dd/MM/yyyy")</dd>
+    <dt class="col-sm-3">Giới tính</dt>
+    <dd class="col-sm-9">@Model.GioiTinh</dd>
+    <dt class="col-sm-3">Số điện thoại</dt>
+    <dd class="col-sm-9">@Model.SoDienThoai</dd>
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+    <dt class="col-sm-3">Địa chỉ</dt>
+    <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.DiaChi) ? "(chưa cập nhật)" : Model.DiaChi)</dd>
+</dl>
+
+<h4 class="mt-4">Các lớp đã đăng ký</h4>
+@if (!Model.DanhSachDangKy.Any())
+{
+    <div class="alert alert-info">Học viên chưa đăng ký lớp nào.</div>
+}
+else
+{
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr><th>Lớp</th><th>Khóa học</th><th>Ngày đăng ký</th><th class="text-end">Học phí</th><th>Trạng thái</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model.DanhSachDangKy)
+            {
+                <tr>
+                    <td>@d.TenLop</td>
+                    <td>@d.TenKhoaHoc</td>
+                    <td>@d.NgayDangKy.ToString("dd/MM/yyyy")</td>
+                    <td class="text-end">@(d.HocPhi.ToString("N0") + " đ")</td>
+                    <td><partial name="_TrangThaiDangKyBadge" model="d.TrangThai" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>

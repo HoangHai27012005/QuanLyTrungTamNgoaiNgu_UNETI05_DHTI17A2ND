@@ -1,0 +1,51 @@
+﻿@* Họ và tên: Nguyễn Hoàng Huy *@
+@* Mã sinh viên: 23203100054 *@
+@* Nội dung thực hiện: Giao diện lịch sử đăng ký của học viên *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model List<LichSuDangKyViewModel>
+@{
+    ViewData["Title"] = "Lịch sử đăng ký";
+}
+
+<h2 class="mb-3">Lịch sử đăng ký lớp học</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Bạn chưa đăng ký lớp nào.
+        <a asp-controller="LopHoc" asp-action="Index">Xem danh sách lớp học</a>
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Tên lớp</th>
+                <th>Khóa học</th>
+                <th>Ngày đăng ký</th>
+                <th class="text-end">Học phí</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int stt = 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(stt++)</td>
+                    <td>
+                        <a asp-controller="LopHoc" asp-action="Details" asp-route-id="@item.MaLop">@item.TenLop</a>
+                    </td>
+                    <td>@item.TenKhoaHoc</td>
+                    <td>@item.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="text-end">@(item.HocPhi.ToString("N0") + " đ")</td>
+                    <td><partial name="_TrangThaiDangKyBadge" model="item.TrangThai" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

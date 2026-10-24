@@ -1,0 +1,8 @@
+Dự án: QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND, ASP.NET Core 10 MVC, EF Core 10 Code First, SQL Server.
+Hằng số dùng chung trong Models/HangSo.cs: VaiTroTaiKhoan (Admin, HocVien), TrangThaiLopHoc, TrangThaiDangKyHoc. Không viết chuỗi trạng thái/vai trò trực tiếp trong code.
+TaiKhoan.TrangThai và KhoaHoc.TrangThai kiểu bool (true = hoạt động/đang mở). LopHoc.TrangThai và DangKyHoc.TrangThai kiểu string.
+Session keys: MaTaiKhoan, HoTen, VaiTro.
+Phân quyền phải kiểm tra ở Controller (server), không chỉ ẩn menu.
+Mỗi file Model, Controller, ViewModel, View phải có 3 dòng comment đầu file: Họ và tên, Mã sinh viên, Nội dung thực hiện.
+Commit theo mẫu: [Mã SV] [Module n] Nội dung.
+Chế độ rà soát: KHÔNG tự sửa code trừ khi tôi yêu cầu.

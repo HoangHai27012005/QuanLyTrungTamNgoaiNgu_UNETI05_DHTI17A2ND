@@ -1,0 +1,81 @@
+﻿@* Họ và tên: Nguyễn Hoàng Huy *@
+@* Mã sinh viên: 23203100054 *@
+@* Nội dung thực hiện: Danh sách học viên cho Admin (tìm kiếm + phân trang) *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model HocVienIndexViewModel
+@{
+    ViewData["Title"] = "Danh sách học viên";
+}
+
+<h2 class="mb-3">Danh sách học viên</h2>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-5">
+        <input name="tuKhoa" value="@Model.TuKhoa" class="form-control"
+               placeholder="Tìm theo họ tên, email, số điện thoại..." />
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Xóa lọc</a>
+    </div>
+</form>
+
+<p class="text-muted">Tìm thấy <strong>@Model.TongSoBanGhi</strong> học viên.</p>
+
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Mã</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th class="text-center">Số đăng ký</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var hv in Model.DanhSach)
+        {
+            <tr>
+                <td>@hv.MaHocVien</td>
+                <td>@hv.HoTen</td>
+                <td>@hv.Email</td>
+                <td>@hv.SoDienThoai</td>
+                <td class="text-center">@hv.SoDangKy</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@hv.MaHocVien">Chi tiết</a>
+                </td>
+            </tr>
+        }
+        @if (!Model.DanhSach.Any())
+        {
+            <tr><td colspan="6" class="text-center text-muted">Không có học viên phù hợp.</td></tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.TongSoTrang > 1)
+{
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.Trang <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-tuKhoa="@Model.TuKhoa" asp-route-trang="@(Model.Trang - 1)"
+                   asp-route-kichThuocTrang="@Model.KichThuocTrang">«</a>
+            </li>
+            @for (int i = 1; i <= Model.TongSoTrang; i++)
+            {
+                <li class="page-item @(i == Model.Trang ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa" asp-route-trang="@i"
+                       asp-route-kichThuocTrang="@Model.KichThuocTrang">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.Trang >= Model.TongSoTrang ? "disabled" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-tuKhoa="@Model.TuKhoa" asp-route-trang="@(Model.Trang + 1)"
+                   asp-route-kichThuocTrang="@Model.KichThuocTrang">»</a>
+            </li>
+        </ul>
+    </nav>
+}

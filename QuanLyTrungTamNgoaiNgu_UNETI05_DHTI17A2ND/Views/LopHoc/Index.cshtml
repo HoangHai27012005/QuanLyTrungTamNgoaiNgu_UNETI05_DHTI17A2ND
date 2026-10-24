@@ -1,5 +1,145 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@* Họ và tên: Hoàng Thanh Hải *@
+@* Mã sinh viên: 23203100089 *@
+@* Nội dung thực hiện: Danh sách lớp học - form tìm kiếm, lọc, sắp xếp, bảng dữ liệu, phân trang *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model LopHocIndexViewModel
 @{
+    ViewData["Title"] = "Danh sách lớp học";
+    // Chỉ để ẩn/hiện nút. Quyền thật được kiểm tra ở Controller bằng [YeuCauAdmin]
+    bool laAdmin = PhienDangNhap.LaAdmin(Context.Session);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Danh sách lớp học</h2>
+    @if (laAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">+ Thêm lớp học</a>
+    }
+</div>
+
+@* ===== FORM TÌM KIẾM / LỌC / SẮP XẾP (method GET để điều kiện nằm trên URL) ===== *@
+<form asp-action="Index" method="get" class="card card-body mb-3">
+    <div class="row g-2">
+        <div class="col-md-4">
+            <label asp-for="TuKhoa" class="form-label">Tìm kiếm</label>
+            <input asp-for="TuKhoa" class="form-control" placeholder="Tên lớp hoặc tên khóa học" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="MaKhoaHoc" class="form-label">Khóa học</label>
+            <select asp-for="MaKhoaHoc" asp-items="Model.DanhSachKhoaHoc" class="form-select">
+                <option value="">-- Tất cả khóa học --</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="NgoaiNgu" class="form-label">Ngoại ngữ</label>
+            <select asp-for="NgoaiNgu" asp-items="Model.DanhSachNgoaiNgu" class="form-select">
+                <option value="">-- Tất cả ngoại ngữ --</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="TrangThai" class="form-label">Trạng thái lớp</label>
+            <select asp-for="TrangThai" asp-items="Model.DanhSachTrangThai" class="form-select">
+                <option value="">-- Tất cả trạng thái --</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="HocPhiTu" class="form-label">Học phí từ (đ)</label>
+            <input asp-for="HocPhiTu" type="number" min="0" step="1000" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="HocPhiDen" class="form-label">Học phí đến (đ)</label>
+            <input asp-for="HocPhiDen" type="number" min="0" step="1000" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="SapXep" class="form-label">Sắp xếp</label>
+            <select asp-for="SapXep" asp-items="Model.DanhSachSapXep" class="form-select"
+                    onchange="this.form.submit()"></select>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="KichThuocTrang" class="form-label">Hiển thị</label>
+            <select asp-for="KichThuocTrang" asp-items="Model.DanhSachKichThuoc" class="form-select"
+                    onchange="this.form.submit()"></select>
+        </div>
+        <div class="col-md-9 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Xóa bộ lọc</a>
+        </div>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.CanhBao))
+{
+    <div class="alert alert-warning">@Model.CanhBao</div>
+}
+
+@if (!Model.DanhSach.Any())
+{
+    <div class="alert alert-info">
+        Không có lớp học phù hợp@(Model.CoDieuKienLoc ? " với điều kiện tìm kiếm/lọc hiện tại" : "").
+        @if (Model.CoDieuKienLoc)
+        {
+            <a asp-action="Index" class="alert-link">Xóa bộ lọc</a>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">
+        Tìm thấy <strong>@Model.TongSoBanGhi</strong> lớp học
+        (hiển thị @Model.TuBanGhi - @Model.DenBanGhi, trang @Model.Trang/@Model.TongSoTrang)
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Tên lớp</th>
+                    <th>Khóa học</th>
+                    <th>Ngoại ngữ</th>
+                    <th>Khai giảng</th>
+                    <th>Lịch học</th>
+                    <th class="text-end">Học phí</th>
+                    <th class="text-center">Chỗ còn lại</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.DanhSach)
+                {
+                    <tr>
+                        <td>@item.TenLop</td>
+                        <td>@item.TenKhoaHoc</td>
+                        <td>@item.NgoaiNgu</td>
+                        <td>@item.NgayKhaiGiang.ToString("dd/MM/yyyy")</td>
+                        <td>@item.LichHoc</td>
+                        <td class="text-end">@item.HocPhi.ToString("N0") đ</td>
+                        <td class="text-center">
+                            @if (item.DaDay)
+                            {
+                                <span class="badge bg-danger">Hết chỗ</span>
+                            }
+                            else
+                            {
+                                <span>@item.ConLai</span><span class="text-muted"> / @item.SoLuongToiDa</span>
+                            }
+                        </td>
+                        <td><partial name="_TrangThaiBadge" model="item.TrangThai" /></td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@item.MaLop" class="btn btn-sm btn-outline-info">Chi tiết</a>
+                            @if (laAdmin)
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.MaLop" class="btn btn-sm btn-outline-primary">Sửa</a>
+                                <a asp-action="Delete" asp-route-id="@item.MaLop" class="btn btn-sm btn-outline-danger">Xóa</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <partial name="_PhanTrang" model="Model" />
 }
