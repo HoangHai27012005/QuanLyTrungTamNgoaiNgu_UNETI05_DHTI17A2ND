@@ -30,7 +30,7 @@ namespace QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Controllers
                 query = query.Where(k => k.TrangThai);
 
             var danhSach = await query
-                .OrderBy(k => k.NgoaiNgu)
+                .OrderByDescending(k => k.HocPhi)
                 .ThenBy(k => k.TenKhoaHoc)
                 .ToListAsync();
 

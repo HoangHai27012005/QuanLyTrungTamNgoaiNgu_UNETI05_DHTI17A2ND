@@ -1,5 +1,101 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@* Họ và tên: Ngụy Thế Toàn *@
+@* Mã sinh viên: 2320310050 *@
+@* Nội dung thực hiện: Chi tiết một đăng ký và các thao tác đổi trạng thái được phép *@
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models
+@using QuanLyTrungTamNgoaiNgu_UNETI05_DHTI17A2ND.Models.ViewModels
+@model QuanLyDangKyChiTietViewModel
 @{
+    ViewData["Title"] = "Chi tiết đăng ký";
+    var urlHienTai = Context.Request.Path.Value + Context.Request.QueryString.Value;
 }
+
+<h2 class="mb-3">Chi tiết đăng ký #@Model.MaDangKy</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>Đăng ký</h5>
+        <dl class="row">
+            <dt class="col-sm-4">Ngày đăng ký</dt>
+            <dd class="col-sm-8">@Model.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</dd>
+            <dt class="col-sm-4">Học phí</dt>
+            <dd class="col-sm-8">@(Model.HocPhi.ToString("N0") + " đ")</dd>
+            <dt class="col-sm-4">Trạng thái</dt>
+            <dd class="col-sm-8"><partial name="_TrangThaiDangKyBadge" model="Model.TrangThai" /></dd>
+        </dl>
+        <h5>Học viên</h5>
+        <dl class="row">
+            <dt class="col-sm-4">Họ tên</dt>
+            <dd class="col-sm-8">@Model.HoTenHocVien</dd>
+            <dt class="col-sm-4">Email</dt>
+            <dd class="col-sm-8">@Model.EmailHocVien</dd>
+            <dt class="col-sm-4">Số điện thoại</dt>
+            <dd class="col-sm-8">@Model.SoDienThoaiHocVien</dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <h5>Lớp học</h5>
+        <dl class="row">
+            <dt class="col-sm-4">Lớp</dt>
+            <dd class="col-sm-8">@Model.TenLop</dd>
+            <dt class="col-sm-4">Khóa học</dt>
+            <dd class="col-sm-8">@Model.TenKhoaHoc</dd>
+            <dt class="col-sm-4">Khai giảng</dt>
+            <dd class="col-sm-8">@Model.NgayKhaiGiang.ToString("dd/MM/yyyy")</dd>
+            <dt class="col-sm-4">Lịch học</dt>
+            <dd class="col-sm-8">@Model.LichHoc</dd>
+            <dt class="col-sm-4">Phòng</dt>
+            <dd class="col-sm-8">@Model.PhongHoc</dd>
+            <dt class="col-sm-4">Trạng thái lớp</dt>
+            <dd class="col-sm-8">@Model.TrangThaiLop</dd>
+            <dt class="col-sm-4">Chỗ</dt>
+            <dd class="col-sm-8">
+                @Model.SoDaXacNhan / @Model.SoLuongToiDa đã xác nhận
+                @if (Model.DaDay)
+                {
+                    <span class="badge bg-danger">Đầy</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<h5 class="mt-3">Thao tác</h5>
+@if (!Model.TrangThaiChoPhep.Any())
+{
+    <p class="text-muted">Không có thao tác nào cho trạng thái này.</p>
+}
+else
+{
+    <div class="d-flex gap-2 mb-3">
+        @foreach (var tt in Model.TrangThaiChoPhep)
+        {
+            if (tt == TrangThaiDangKyHoc.DaXacNhan)
+            {
+                <form asp-action="XacNhan" method="post">
+                    <input type="hidden" name="maDangKy" value="@Model.MaDangKy" />
+                    <input type="hidden" name="returnUrl" value="@urlHienTai" />
+                    <button type="submit" class="btn btn-success">Xác nhận đăng ký</button>
+                </form>
+            }
+            else if (tt == TrangThaiDangKyHoc.DaHuy)
+            {
+                <form asp-action="Huy" method="post" onsubmit="return confirm('Bạn chắc chắn muốn hủy đăng ký này?');">
+                    <input type="hidden" name="maDangKy" value="@Model.MaDangKy" />
+                    <input type="hidden" name="returnUrl" value="@urlHienTai" />
+                    <button type="submit" class="btn btn-danger">Hủy đăng ký</button>
+                </form>
+            }
+            else
+            {
+                <form asp-action="CapNhatTrangThai" method="post">
+                    <input type="hidden" name="maDangKy" value="@Model.MaDangKy" />
+                    <input type="hidden" name="trangThaiMoi" value="@tt" />
+                    <input type="hidden" name="returnUrl" value="@urlHienTai" />
+                    <button type="submit" class="btn btn-warning">Khôi phục về "@tt"</button>
+                </form>
+            }
+        }
+    </div>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>

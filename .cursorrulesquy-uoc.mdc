@@ -5,4 +5,4 @@ Session keys: MaTaiKhoan, HoTen, VaiTro.
 Phân quyền phải kiểm tra ở Controller (server), không chỉ ẩn menu.
 Mỗi file Model, Controller, ViewModel, View phải có 3 dòng comment đầu file: Họ và tên, Mã sinh viên, Nội dung thực hiện.
 Commit theo mẫu: [Mã SV] [Module n] Nội dung.
-Chế độ rà soát: KHÔNG tự sửa code trừ khi tôi yêu cầu.
+Chế độ rà soát: KHÔNG tự sửa code trừ khi tôi yêu cầu. 
